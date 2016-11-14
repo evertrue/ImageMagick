@@ -40,7 +40,7 @@ dpkg-sig \
   -k $SIGNING_KEY_FINGERPRINT \
   -g "--passphrase ${SIGNING_KEY_PASSPHRASE} --batch --no-use-agent" \
   --sign evertrue \
-  ../imagemagick_${PACKAGE_VERSION}_amd64.deb
+  "$PWD/../imagemagick_${PACKAGE_VERSION}-1_amd64.deb"
 
 # # Upload built artifacts to S3
 /opt/rbenv/shims/deb-s3 upload \
@@ -49,6 +49,7 @@ dpkg-sig \
   --gpg-options "--passphrase ${SIGNING_KEY_PASSPHRASE} --batch --no-use-agent" \
   --prefix debian-repo \
   --bucket ops.evertrue.com \
-  ../imagemagick_${PACKAGE_VERSION}_amd64.deb
+  "$PWD/../imagemagick_${PACKAGE_VERSION}-1_amd64.deb"
 
 sudo rm -rf /opt/ImageMagick-6
+sudo rm -f "$PWD/../imagemagick_${PACKAGE_VERSION}-1_amd64.deb"
