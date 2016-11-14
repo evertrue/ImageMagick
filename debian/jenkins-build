@@ -22,14 +22,18 @@ fi
 sudo /usr/lib/pbuilder/pbuilder-satisfydepends --control control
 sudo apt-get -y build-dep imagemagick
 
+# Because of the quirks of `checkinstall` this needs to be in the exact location that it will
+# be when it is installed for real.
+sudo mkdir -p /opt/ImageMagick-6
+
 PACKAGE_VERSION=`dpkg-parsechangelog --show-field Version`
 
 # Do the build
 ./configure --prefix=/opt/ImageMagick-6 && make
 
-sudo checkinstall -D --install=yes --fstrans=no --pakdir "$PWD/.." \
-     --pkgname imagemagick --backup=no --deldoc=yes --deldesc=yes --delspec=yes --default \
-     --pkgversion "$PACKAGE_VERSION"
+checkinstall -D --install=yes --fstrans=no --pakdir "$PWD/.." \
+   --pkgname imagemagick --backup=no --deldoc=yes --deldesc=yes --delspec=yes --default \
+   --pkgversion "$PACKAGE_VERSION"
 
 dpkg-sig \
   -k $SIGNING_KEY_FINGERPRINT \
@@ -45,3 +49,5 @@ dpkg-sig \
   --prefix debian-repo \
   --bucket ops.evertrue.com \
   ../imagemagick_${PACKAGE_VERSION}_amd64.deb
+
+sudo rm -rf /opt/ImageMagick-6
