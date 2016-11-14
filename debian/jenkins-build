@@ -20,7 +20,7 @@ if [ -z "${SIGNING_KEY_PASSPHRASE}" ]; then
 fi
 
 sudo /usr/lib/pbuilder/pbuilder-satisfydepends --control control
-sudo apt-get build-dep imagemagick
+sudo apt-get -y build-dep imagemagick
 
 PACKAGE_VERSION=`dpkg-parsechangelog --show-field Version`
 
