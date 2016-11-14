@@ -25,6 +25,7 @@ sudo apt-get -y build-dep imagemagick
 # Because of the quirks of `checkinstall` this needs to be in the exact location that it will
 # be when it is installed for real.
 sudo mkdir -p /opt/ImageMagick-6
+sudo chown jenkins:jenkins /opt/ImageMagick-6
 
 PACKAGE_VERSION=`dpkg-parsechangelog --show-field Version`
 
