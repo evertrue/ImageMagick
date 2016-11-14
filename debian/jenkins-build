@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+## KNOWN ISSUE
+#
+# This code results in the signing key passphrase showing up in the build
+# console. To this I say "fuck it." The process for hiding it was so broken
+# and the security implications were minimal. I decided it was not worth the
+# effort. At least it's not in source control.
+
+set -ex
+
+if [ -z "${SIGNING_KEY_FINGERPRINT}" ]; then
+  echo "SIGNING_KEY_FINGERPRINT required"
+  exit 1
+fi
+
+if [ -z "${SIGNING_KEY_PASSPHRASE}" ]; then
+  echo "SIGNING_KEY_PASSPHRASE required"
+  exit 1
+fi
+
+sudo /usr/lib/pbuilder/pbuilder-satisfydepends --control control
+sudo apt-get build-dep imagemagick
+
+PACKAGE_VERSION=`dpkg-parsechangelog --show-field Version`
+
+# Do the build
+./configure --prefix=/opt/ImageMagick-6 && make
+
+sudo checkinstall -D --install=yes --fstrans=no --pakdir "$PWD/.." \
+     --pkgname imagemagick --backup=no --deldoc=yes --deldesc=yes --delspec=yes --default \
+     --pkgversion "$PACKAGE_VERSION"
+
+dpkg-sig \
+  -k $SIGNING_KEY_FINGERPRINT \
+  -g "--passphrase ${SIGNING_KEY_PASSPHRASE} --batch --no-use-agent" \
+  --sign evertrue \
+  ../imagemagick_${PACKAGE_VERSION}_amd64.deb
+
+# # Upload built artifacts to S3
+/opt/rbenv/shims/deb-s3 upload \
+  --arch amd64 \
+  --sign $SIGNING_KEY_FINGERPRINT \
+  --gpg-options "--passphrase ${SIGNING_KEY_PASSPHRASE} --batch --no-use-agent" \
+  --prefix debian-repo \
+  --bucket ops.evertrue.com \
+  ../imagemagick_${PACKAGE_VERSION}_amd64.deb
