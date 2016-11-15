@@ -21,7 +21,7 @@ fi
 
 sudo apt-get -y update
 sudo /usr/lib/pbuilder/pbuilder-satisfydepends --control control
-sudo apt-get -y build-dep imagemagick-et
+sudo apt-get -y build-dep imagemagick
 
 # Because of the quirks of `checkinstall` this needs to be in the exact location that it will
 # be when it is installed for real.
