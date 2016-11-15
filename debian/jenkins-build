@@ -19,8 +19,9 @@ if [ -z "${SIGNING_KEY_PASSPHRASE}" ]; then
   exit 1
 fi
 
+sudo apt-get -y update
 sudo /usr/lib/pbuilder/pbuilder-satisfydepends --control control
-sudo apt-get -y build-dep imagemagick
+sudo apt-get -y build-dep imagemagick-et
 
 # Because of the quirks of `checkinstall` this needs to be in the exact location that it will
 # be when it is installed for real.
@@ -34,14 +35,14 @@ PACKAGE_VERSION_NO_EPOCH=$(echo $PACKAGE_VERSION | sed s/.*:// )
 ./configure --prefix=/opt/ImageMagick-6 && make
 
 checkinstall -D --install=no --fstrans=no --pakdir "$PWD/.." \
-   --pkgname imagemagick --backup=no --deldoc=yes --deldesc=yes --delspec=yes --default \
+   --pkgname imagemagick-et --backup=no --deldoc=yes --deldesc=yes --delspec=yes --default \
    --pkgversion "$PACKAGE_VERSION"
 
 dpkg-sig \
   -k $SIGNING_KEY_FINGERPRINT \
   -g "--passphrase ${SIGNING_KEY_PASSPHRASE} --batch --no-use-agent" \
   --sign evertrue \
-  "$PWD/../imagemagick_${PACKAGE_VERSION_NO_EPOCH}-1_amd64.deb"
+  "$PWD/../imagemagick-et_${PACKAGE_VERSION_NO_EPOCH}-1_amd64.deb"
 
 # # Upload built artifacts to S3
 /opt/rbenv/shims/deb-s3 upload \
@@ -50,7 +51,7 @@ dpkg-sig \
   --gpg-options "--passphrase ${SIGNING_KEY_PASSPHRASE} --batch --no-use-agent" \
   --prefix debian-repo \
   --bucket ops.evertrue.com \
-  "$PWD/../imagemagick_${PACKAGE_VERSION_NO_EPOCH}-1_amd64.deb"
+  "$PWD/../imagemagick-et_${PACKAGE_VERSION_NO_EPOCH}-1_amd64.deb"
 
 sudo rm -rf /opt/ImageMagick-6
-rm -f "$PWD/../imagemagick_${PACKAGE_VERSION_NO_EPOCH}-1_amd64.deb"
+rm -f "$PWD/../imagemagick-et_${PACKAGE_VERSION_NO_EPOCH}-1_amd64.deb"
