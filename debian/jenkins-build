@@ -32,7 +32,7 @@ PACKAGE_VERSION=`dpkg-parsechangelog --show-field Version`
 # Do the build
 ./configure --prefix=/opt/ImageMagick-6 && make
 
-checkinstall -D --install=no --fstrans=yes --pakdir "$PWD/.." \
+checkinstall -D --install=no --fstrans=no --pakdir "$PWD/.." \
    --pkgname imagemagick --backup=no --deldoc=yes --deldesc=yes --delspec=yes --default \
    --pkgversion "$PACKAGE_VERSION"
 
