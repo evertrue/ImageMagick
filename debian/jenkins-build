@@ -28,6 +28,7 @@ sudo mkdir -p /opt/ImageMagick-6
 sudo chown jenkins:jenkins /opt/ImageMagick-6
 
 PACKAGE_VERSION=`dpkg-parsechangelog --show-field Version`
+PACKAGE_VERSION_NO_EPOCH=$(echo $PACKAGE_VERSION | sed s/.*:// )
 
 # Do the build
 ./configure --prefix=/opt/ImageMagick-6 && make
@@ -40,7 +41,7 @@ dpkg-sig \
   -k $SIGNING_KEY_FINGERPRINT \
   -g "--passphrase ${SIGNING_KEY_PASSPHRASE} --batch --no-use-agent" \
   --sign evertrue \
-  "$PWD/../imagemagick_${PACKAGE_VERSION}-1_amd64.deb"
+  "$PWD/../imagemagick_${PACKAGE_VERSION_NO_EPOCH}-1_amd64.deb"
 
 # # Upload built artifacts to S3
 /opt/rbenv/shims/deb-s3 upload \
@@ -49,7 +50,7 @@ dpkg-sig \
   --gpg-options "--passphrase ${SIGNING_KEY_PASSPHRASE} --batch --no-use-agent" \
   --prefix debian-repo \
   --bucket ops.evertrue.com \
-  "$PWD/../imagemagick_${PACKAGE_VERSION}-1_amd64.deb"
+  "$PWD/../imagemagick_${PACKAGE_VERSION_NO_EPOCH}-1_amd64.deb"
 
 sudo rm -rf /opt/ImageMagick-6
-rm -f "$PWD/../imagemagick_${PACKAGE_VERSION}-1_amd64.deb"
+rm -f "$PWD/../imagemagick_${PACKAGE_VERSION_NO_EPOCH}-1_amd64.deb"
