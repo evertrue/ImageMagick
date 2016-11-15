@@ -1,4 +1,4 @@
-imagemagick (6.9.6-4evertrue1.0) unstable; urgency=medium
+imagemagick (8:6.9.6-4evertrue1.0) unstable; urgency=medium
 
   [ Eric Herot ]
   * Recompile for Ubuntu 14.04
