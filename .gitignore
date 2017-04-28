@@ -95,3 +95,5 @@
 .libs
 Makefile
 Makefile.PL
+
+/signingkeys/*
