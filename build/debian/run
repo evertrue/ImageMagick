@@ -9,34 +9,45 @@
 
 set -ex
 
-if [ -z "${SIGNING_KEY_FINGERPRINT}" ]; then
-  echo "SIGNING_KEY_FINGERPRINT required"
+if [ ! -r /jenkinshome/signing_key_passphrase ]; then
+  echo 'File not found: /jenkinshome/signing_key_passphrase'
   exit 1
 fi
 
-if [ -z "${SIGNING_KEY_PASSPHRASE}" ]; then
-  echo "SIGNING_KEY_PASSPHRASE required"
+if [ ! -r /jenkinshome/signing_subkey_fingerprint ]; then
+  echo 'File not found: /jenkinshome/signing_subkey_fingerprint'
   exit 1
 fi
 
-sudo apt-get -y update
-sudo /usr/lib/pbuilder/pbuilder-satisfydepends --control control
-sudo apt-get -y build-dep imagemagick
+SIGNING_KEY_FINGERPRINT=$(cat /jenkinshome/signing_subkey_fingerprint)
+SIGNING_KEY_PASSPHRASE=$(cat /jenkinshome/signing_key_passphrase)
 
-# Because of the quirks of `checkinstall` this needs to be in the exact location that it will
-# be when it is installed for real.
-sudo mkdir -p /opt/ImageMagick-6
-sudo chown jenkins:jenkins /opt/ImageMagick-6
+cd /build
 
 PACKAGE_VERSION=`dpkg-parsechangelog --show-field Version`
 PACKAGE_VERSION_NO_EPOCH=$(echo $PACKAGE_VERSION | sed s/.*:// )
 
 # Do the build
-./configure --prefix=/opt/ImageMagick-6 && make
+./configure \
+  --prefix=/opt/ImageMagick-6 \
+  --without-x
 
-checkinstall -D --install=no --fstrans=no --pakdir "$PWD/.." \
-   --pkgname imagemagick-et --backup=no --deldoc=yes --deldesc=yes --delspec=yes --default \
-   --pkgversion "$PACKAGE_VERSION"
+make
+
+checkinstall -D \
+  --install=no \
+  --fstrans=no \
+  --pakdir "$PWD/.." \
+  --pkgname imagemagick-et \
+  --backup=no \
+  --deldoc=yes \
+  --deldesc=yes \
+  --delspec=yes \
+  --default \
+  --pkgversion "$PACKAGE_VERSION"
+
+gpg --import /jenkinshome/evertrue_apt_pub.gpg
+gpg --allow-secret-key-import --import /jenkinshome/evertrue_apt_sec.gpg
 
 dpkg-sig \
   -k $SIGNING_KEY_FINGERPRINT \
@@ -45,7 +56,7 @@ dpkg-sig \
   "$PWD/../imagemagick-et_${PACKAGE_VERSION_NO_EPOCH}-1_amd64.deb"
 
 # # Upload built artifacts to S3
-/opt/rbenv/shims/deb-s3 upload \
+deb-s3 upload \
   --arch amd64 \
   --sign $SIGNING_KEY_FINGERPRINT \
   --gpg-options "--passphrase ${SIGNING_KEY_PASSPHRASE} --batch --no-use-agent" \
@@ -53,5 +64,5 @@ dpkg-sig \
   --bucket ops.evertrue.com \
   "$PWD/../imagemagick-et_${PACKAGE_VERSION_NO_EPOCH}-1_amd64.deb"
 
-sudo rm -rf /opt/ImageMagick-6
+rm -rf /opt/ImageMagick-6
 rm -f "$PWD/../imagemagick-et_${PACKAGE_VERSION_NO_EPOCH}-1_amd64.deb"

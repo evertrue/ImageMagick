@@ -11,10 +11,3 @@ Key Modifications
 * `debian/changelog` - Used to set the package version and describe updates
 * `debian/control` - Package description and dependency set listing
 * `debian/jenkins-built` - The main shell script that Jenkins runs to do the build
-
-Building With Docker
-====================
-
-```
-docker run -v '/var/lib/jenkins:/signingkeys'
-```
