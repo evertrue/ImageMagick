@@ -9,18 +9,18 @@
 
 set -ex
 
-if [ ! -r /jenkinshome/signing_key_passphrase ]; then
-  echo 'File not found: /jenkinshome/signing_key_passphrase'
+if [ ! -r /secrets/signing_key_passphrase ]; then
+  echo 'File not found: /secrets/signing_key_passphrase'
   exit 1
 fi
 
-if [ ! -r /jenkinshome/signing_subkey_fingerprint ]; then
-  echo 'File not found: /jenkinshome/signing_subkey_fingerprint'
+if [ ! -r /secrets/signing_subkey_fingerprint ]; then
+  echo 'File not found: /secrets/signing_subkey_fingerprint'
   exit 1
 fi
 
-SIGNING_KEY_FINGERPRINT=$(cat /jenkinshome/signing_subkey_fingerprint)
-SIGNING_KEY_PASSPHRASE=$(cat /jenkinshome/signing_key_passphrase)
+SIGNING_KEY_FINGERPRINT=$(cat /secrets/signing_subkey_fingerprint)
+SIGNING_KEY_PASSPHRASE=$(cat /secrets/signing_key_passphrase)
 
 cd /build
 
@@ -46,8 +46,8 @@ checkinstall -D \
   --default \
   --pkgversion "$PACKAGE_VERSION"
 
-gpg --import /jenkinshome/evertrue_apt_pub.gpg
-gpg --allow-secret-key-import --import /jenkinshome/evertrue_apt_sec.gpg
+gpg --import /secrets/evertrue_apt_pub.gpg
+gpg --allow-secret-key-import --import /secrets/evertrue_apt_sec.gpg
 
 dpkg-sig \
   -k $SIGNING_KEY_FINGERPRINT \
