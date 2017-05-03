@@ -12,6 +12,9 @@ RUN gem install --no-ri --no-rdoc deb-s3
 
 COPY build /build
 
+RUN mkdir /root/.gnupg
+COPY gpg.conf /root/.gnupg/gpg.conf
+
 WORKDIR /build
 
 RUN /usr/lib/pbuilder/pbuilder-satisfydepends --control /build/debian/control
