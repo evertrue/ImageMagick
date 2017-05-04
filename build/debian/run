@@ -58,6 +58,7 @@ dpkg-sig \
 # # Upload built artifacts to S3
 deb-s3 upload \
   --arch amd64 \
+  --codename xenial \
   --sign $SIGNING_KEY_FINGERPRINT \
   --gpg-options "--passphrase ${SIGNING_KEY_PASSPHRASE} --batch --no-use-agent" \
   --prefix debian-repo \
