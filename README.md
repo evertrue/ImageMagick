@@ -1,9 +1,11 @@
 ImageMagick-et
 ==============
 
-This is a custom branch of ImageMagick meant to build version 6.9 on an Ubuntu 14.04 machine and install in `/opt/ImageMagick-6`.
+This is a custom branch of ImageMagick meant to build version 6.9.6 on an Ubuntu 14.04 machine and install in `/opt/ImageMagick-6`.
 
 New commits to the `evertrue/dev` branch are [automatically built by Jenkins](https://ci.evertrue.com/job/ImageMagick-debian/) and deployed to the [EverTrue package repository](https://console.aws.amazon.com/s3/home?region=us-east-1&bucket=ops.evertrue.com&prefix=debian-repo/) in S3.
+
+This is necessetated by [this bug](http://www.imagemagick.org/discourse-server/viewtopic.php?t=28501) which (as of this writing) has not been fixed in the v6 branch.
 
 Key Modifications
 =================
