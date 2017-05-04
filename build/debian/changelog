@@ -1,3 +1,10 @@
+imagemagick-et (8:6.9.6-4evertrue2.1) stable; urgency=medium
+
+  [ Eric Herot ]
+  * Add proper dependencies
+
+ -- Eric Herot <eric.herot@evertrue.com>  Mon, 27 Apr 2017 16:00:20 -0400
+
 imagemagick-et (8:6.9.6-4evertrue2.0) unstable; urgency=medium
 
   [ Eric Herot ]
