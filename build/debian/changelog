@@ -1,0 +1,14 @@
+imagemagick-et (8:6.9.6-4evertrue2.0) unstable; urgency=medium
+
+  [ Eric Herot ]
+  * Recompile for Ubuntu 16.04
+  * Include a bunch more packages in the build
+
+ -- Eric Herot <eric.herot@evertrue.com>  Mon, 27 Apr 2017 16:00:20 -0400
+
+imagemagick-et (8:6.9.6-4evertrue1.0) unstable; urgency=medium
+
+  [ Eric Herot ]
+  * Recompile for Ubuntu 14.04
+
+ -- Eric Herot <eric.herot@evertrue.com>  Mon, 14 Nov 2016 16:14:20 -0400

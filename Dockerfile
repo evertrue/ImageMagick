@@ -10,21 +10,18 @@ RUN apt-get -y update && \
 RUN apt-get -y build-dep imagemagick
 RUN gem install --no-ri --no-rdoc deb-s3
 
-#COPY build /build
-RUN mkdir /build
-
-WORKDIR /build
-
-COPY build-debian /build/build-debian
+COPY build /build
 
 RUN mkdir /root/.gnupg
 COPY gpg.conf /root/.gnupg/gpg.conf
 
-RUN /usr/lib/pbuilder/pbuilder-satisfydepends --control /build/build-debian/control
+WORKDIR /build
+
+RUN /usr/lib/pbuilder/pbuilder-satisfydepends --control /build/debian/control
 
 # Because of the quirks of `checkinstall` the package needs to be built in
 # the exact location that it will be when it is installed for real.
 RUN mkdir -p /opt/ImageMagick-6
 
-CMD ["/build/build-debian/run"]
+CMD ["/build/debian/run"]
 #CMD ["/bin/bash"]
