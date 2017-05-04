@@ -44,7 +44,7 @@ checkinstall -D \
   --deldesc=yes \
   --delspec=yes \
   --default \
-  --requires libilmbase12,libdjvulibre-text,libopenexr22,libjbig0,liblcms2-2,libtiff5,liblqr-1-0,libdjvulibre21,libfftw3-double3,libjpeg-turbo8,libjpeg8 \
+  --requires libilmbase12,libdjvulibre-text,libopenexr22,libjbig0,liblcms2-2,libtiff5,liblqr-1-0,libdjvulibre21,libfftw3-double3,libjpeg-turbo8,libjpeg8,libwmf0.2-7 \
   --pkgversion "$PACKAGE_VERSION"
 
 gpg --import /secrets/evertrue_apt_pub.gpg
