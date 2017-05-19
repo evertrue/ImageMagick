@@ -52,7 +52,7 @@ gpg --allow-secret-key-import --import /secrets/evertrue_apt_sec.gpg
 
 dpkg-sig \
   -k $SIGNING_KEY_FINGERPRINT \
-  -g "--passphrase ${SIGNING_KEY_PASSPHRASE} --batch --no-use-agent" \
+  -g "--passphrase ${SIGNING_KEY_PASSPHRASE} --digest-algo SHA512 --batch --no-use-agent" \
   --sign evertrue \
   "$PWD/../imagemagick-et_${PACKAGE_VERSION_NO_EPOCH}-1_amd64.deb"
 
@@ -61,7 +61,7 @@ deb-s3 upload \
   --arch amd64 \
   --codename xenial \
   --sign $SIGNING_KEY_FINGERPRINT \
-  --gpg-options "--passphrase ${SIGNING_KEY_PASSPHRASE} --batch --no-use-agent" \
+  --gpg-options "--passphrase ${SIGNING_KEY_PASSPHRASE} --digest-algo SHA512 --batch --no-use-agent" \
   --prefix debian-repo \
   --bucket ops.evertrue.com \
   "$PWD/../imagemagick-et_${PACKAGE_VERSION_NO_EPOCH}-1_amd64.deb"
