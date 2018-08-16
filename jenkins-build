@@ -27,6 +27,7 @@ sudo apt-get -y build-dep imagemagick
 # be when it is installed for real.
 sudo mkdir -p /opt/ImageMagick-6
 sudo chown jenkins:jenkins /opt/ImageMagick-6
+cd package/build
 
 PACKAGE_VERSION=`dpkg-parsechangelog --show-field Version`
 PACKAGE_VERSION_NO_EPOCH=$(echo $PACKAGE_VERSION | sed s/.*:// )
